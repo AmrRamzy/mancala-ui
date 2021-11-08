@@ -1,0 +1,34 @@
+<h1>{{currentPlayerName}}</h1>
+
+<div class="form-group">
+  <label for="player1Name">First player Name</label>
+  <input size='10' type="text" class="form-control" id="player1Name" [(ngModel)]="player1Name">
+  <span></span>
+  <label for="player2Name">Second player Name</label>
+  <input size='10' type="text" class="form-control" id="player2Name" [(ngModel)]="player2Name">
+  <span></span>
+  <button (click)="createGame()" class="btn btn-default">Submit</button>
+</div>
+<div class="mancala1">
+  <span class="mancala-card">{{currentMancala}}</span>
+</div>
+<div class="mancala2">
+  <span class="mancala-card">{{otherMancala}}</span>
+</div>
+<div class="content">
+
+  <!-- Resources -->
+  <h2>Resources</h2>
+  <p>Here are some links to help you get started:</p>
+
+  <div class="card-container-other-player">
+    <span *ngFor="let pit of otherPlayerBoard; let i = index" class="card">{{pit}}</span>
+  </div>
+  <div class="card-container">
+    <span *ngFor="let pit of currentPlayerBoard; let i = index" class="card" (click)="play(i)">{{pit}}</span>
+  </div>
+
+</div>
+<img class="mancala" src="pineapple.jpg" alt="Pineapple" style="width:170px;height:170px;margin-left:15px;">
+
+<router-outlet></router-outlet>
