@@ -52,7 +52,8 @@ export class GameComponent implements OnInit {
         this.winnerPlayerName = this.game[0].gameWinnerPlayerName;
         if(this.winnerPlayerName){
           window.alert(
-            `${this.winnerPlayerName} is the game WINNER!!`);
+            `${this.winnerPlayerName} is the game WINNER!! \n 
+            with score ${this.game[0].gameBoardMap[this.winnerPlayerName].mancala}`);
         }
         this.currentPlayerBoard = this.game[0].gameBoardMap[this.currentPlayerName].board;
         this.currentMancala = this.game[0].gameBoardMap[this.currentPlayerName].mancala;
