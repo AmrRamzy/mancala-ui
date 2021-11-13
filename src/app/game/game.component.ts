@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendApiService } from '../backend-api.service';
 
-export interface Player {
+export interface GameBoard {
   playerName: string;
   board: Array<number>;
   mancala: number;
@@ -10,10 +10,9 @@ export interface Player {
 export interface Game {
   gameId: string;
   currentPlayerName: string;
-  gameInProgress: boolean;
-  gamePlayable: boolean;
+  gameStatus: string;
   gameWinnerPlayerName:string;
-  gameBoardMap: Record<string, Player>;
+  gameBoardList: Array< GameBoard>;
 }
 
 @Component({
@@ -24,15 +23,18 @@ export interface Game {
 export class GameComponent implements OnInit {
 
   value = 'mancala-ui';
+  gameIsLive =false;
+  isNewGame = true;
+  loadGameId="";
   gameId="";
   player1Name ="";
   player2Name ="";
   currentPlayerName = "";
   winnerPlayerName = "";
   game: Game[] = [];
-  currentPlayerBoard: Array<number> = [6, 6, 6, 6, 6, 6];
+  currentPlayerBoard: Array<number> = [0, 0, 0, 0, 0, 0];
   currentMancala: number = 0;
-  otherPlayerBoard: Array<number> = [6, 6, 6, 6, 6, 6];
+  otherPlayerBoard: Array<number> = [0, 0, 0, 0, 0, 0];
   otherMancala: number = 0;
 
   constructor(
@@ -48,18 +50,20 @@ export class GameComponent implements OnInit {
         this.game = [];
         this.game.push(data);
         console.log(this.game);
+        
         this.currentPlayerName = this.game[0].currentPlayerName;
         this.winnerPlayerName = this.game[0].gameWinnerPlayerName;
         if(this.winnerPlayerName){
           window.alert(
             `${this.winnerPlayerName} is the game WINNER!! \n 
-            with score ${this.game[0].gameBoardMap[this.winnerPlayerName].mancala}`);
+            with score ${this.game[0].gameBoardList.find(board => board.playerName == this.winnerPlayerName)!.mancala}`);
         }
-        this.currentPlayerBoard = this.game[0].gameBoardMap[this.currentPlayerName].board;
-        this.currentMancala = this.game[0].gameBoardMap[this.currentPlayerName].mancala;
-        for (let key in this.game[0].gameBoardMap) {
-          if(this.game[0].gameBoardMap[key].playerName!=this.currentPlayerName){
-            var otherPlayerGameBorad = this.game[0].gameBoardMap[key];
+        let currentPlayerGameBoard:GameBoard = this.game[0].gameBoardList.find(board => board.playerName == this.currentPlayerName)!;
+        this.currentPlayerBoard = currentPlayerGameBoard.board;
+        this.currentMancala = currentPlayerGameBoard.mancala;
+        for (let key in this.game[0].gameBoardList) {
+          if(this.game[0].gameBoardList[key].playerName!=this.currentPlayerName){
+            var otherPlayerGameBorad = this.game[0].gameBoardList[key];
             this.otherPlayerBoard = [];
             for (const number of otherPlayerGameBorad.board.reverse()) {
               this.otherPlayerBoard.push(number);
@@ -79,16 +83,19 @@ export class GameComponent implements OnInit {
   }
 
   getGame() {
-    this.api.getGame(this.gameId).subscribe(
+    this.api.getGame(this.loadGameId).subscribe(
       (data) => {
         this.game = [];
         this.game.push(data);
         console.log(this.game);
-        this.currentPlayerBoard = this.game[0].gameBoardMap[this.currentPlayerName].board;
-        this.currentMancala = this.game[0].gameBoardMap[this.currentPlayerName].mancala;
-        for (let key in this.game[0].gameBoardMap) {
-          if(this.game[0].gameBoardMap[key].playerName!=this.currentPlayerName){
-            var otherPlayerGameBorad = this.game[0].gameBoardMap[key];
+        this.gameId = this.game[0].gameId;
+        this.currentPlayerName = this.game[0].currentPlayerName;
+        let currentPlayerGameBoard:GameBoard = this.game[0].gameBoardList.find(board => board.playerName == this.currentPlayerName)!;
+        this.currentPlayerBoard = currentPlayerGameBoard.board;
+        this.currentMancala = currentPlayerGameBoard.mancala;
+        for (let key in this.game[0].gameBoardList) {
+          if(this.game[0].gameBoardList[key].playerName!=this.currentPlayerName){
+            var otherPlayerGameBorad = this.game[0].gameBoardList[key];
             this.otherPlayerBoard = [];
             for (const number of otherPlayerGameBorad.board.reverse()) {
               this.otherPlayerBoard.push(number);
@@ -96,7 +103,8 @@ export class GameComponent implements OnInit {
             this.otherMancala = otherPlayerGameBorad.mancala;
             break;
           }
-      }
+       }
+       this.gameIsLive =true;
       },
       (error) => {
         console.log(`error status : ${error.status} ${error.statusText}`);
@@ -106,7 +114,11 @@ export class GameComponent implements OnInit {
 
       })
   }
+  
 
+  changeGame(isNewGame:boolean) {
+    this.isNewGame =isNewGame;
+  }
   createGame() {
     this.api.createGame(this.player1Name, this.player2Name).subscribe(
       (data) => {
@@ -115,11 +127,12 @@ export class GameComponent implements OnInit {
         console.log(this.game);
         this.gameId = this.game[0].gameId;
         this.currentPlayerName = this.game[0].currentPlayerName;
-        this.currentPlayerBoard = this.game[0].gameBoardMap[this.currentPlayerName].board;
-        this.currentMancala = this.game[0].gameBoardMap[this.currentPlayerName].mancala;
-        for (let key in this.game[0].gameBoardMap) {
-          if(this.game[0].gameBoardMap[key].playerName!=this.currentPlayerName){
-            var otherPlayerGameBorad = this.game[0].gameBoardMap[key];
+        let currentPlayerGameBoard:GameBoard = this.game[0].gameBoardList.find(board => board.playerName == this.currentPlayerName)!;
+        this.currentPlayerBoard = currentPlayerGameBoard.board;
+        this.currentMancala = currentPlayerGameBoard.mancala;
+        for (let key in this.game[0].gameBoardList) {
+          if(this.game[0].gameBoardList[key].playerName!=this.currentPlayerName){
+            var otherPlayerGameBorad = this.game[0].gameBoardList[key];
             this.otherPlayerBoard = [];
             for (const number of otherPlayerGameBorad.board.reverse()) {
               this.otherPlayerBoard.push(number);
@@ -127,7 +140,8 @@ export class GameComponent implements OnInit {
             this.otherMancala = otherPlayerGameBorad.mancala;
             break;
           }
-      }
+        }
+        this.gameIsLive =true;
       },
       (error) => {
         console.log(`error status : ${error.status} ${error.statusText}`);

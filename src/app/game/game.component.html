@@ -1,34 +1,93 @@
-<h1 *ngIf="currentPlayerName !==''" class="Center">{{currentPlayerName}}'s turn</h1>
-
-
+<html *ngIf="!gameIsLive">
+   <head>
+      <title>Simple registration form</title>
+      <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+   </head>
+   <body>
+      <div class="main-block">
+         <h1>Registration</h1>
+         <hr>
+         <div class="gender">
+          <input type="radio" value="none" id="male" name="gender" (click)="changeGame(true)" checked/>
+          <label for="male" class="radio">New Game</label>
+          <input type="radio" value="none" id="female" name="gender" (click)="changeGame(false)" />
+          <label for="female" class="radio">Load Game</label>
+        </div>
+         <div *ngIf="isNewGame">
+          <hr>
+          <h3>first Player Name</h3>
+          <label id="icon"><i class="fas fa-user"></i></label>
+          <input type="text" id="player1Name" [(ngModel)]="player1Name" required/>
+          <h3>second Player Name</h3>
+          <label id="icon" ><i class="fas fa-user"></i></label>
+          <input type="text" id="player2Name" [(ngModel)]="player2Name" required/>
+          <hr>
+          <div class="btn-block">
+            <button (click)="createGame()" >Start Game</button>
+         </div>
+         </div>
+         <div *ngIf="!isNewGame">
+          <hr>
+          <h3>Game ID</h3>
+          <label id="icon"><i class="fas fa-user"></i></label>
+          <input type="text" id="loadGameId" [(ngModel)]="loadGameId">
+          <hr>
+          <div class="btn-block">
+            <button (click)="getGame()" >Load Game</button>
+         </div>
+         </div>
+         
+      </div>
+   </body>
+</html>
+<!--
 <div class="form-group">
-  <label for="player1Name">First player Name</label>
-  <input size='10' type="text" class="form-control input" id="player1Name" [(ngModel)]="player1Name">
-  <br>
-  <label for="player2Name">Second player Name</label>
-  <input size='10' type="text" class="form-control input" id="player2Name" [(ngModel)]="player2Name">
-  <span></span>
-  <button (click)="createGame()" class="btn btn-default">Start Game</button>
+   <label for="player1Name">First player Name</label>
+   <input size='10' type="text" class="form-control input" id="player1Name" [(ngModel)]="player1Name">
+   <br>
+   <label for="player2Name">Second player Name</label>
+   <input size='10' type="text" class="form-control input" id="player2Name" [(ngModel)]="player2Name">
+   <span></span>
+   <button (click)="createGame()" class="btn btn-default">Start Game</button>
 </div>
-<div class="mancala1">
-  <span class="mancala-card" style="color:blue">{{currentMancala}}</span>
+OR Load Existing Game
+<div class="form-group">
+   <label for="gameId">Game ID</label>
+   <input size='10' type="text" class="form-control input" id="loadGameId" [(ngModel)]="loadGameId">
+   <br>
+   <span></span>
+   <button (click)="getGame()" class="btn btn-default">load Game</button>
 </div>
-<div class="mancala2">
-  <span class="mancala-card" style="color:red">{{otherMancala}}</span>
+-->
+
+<div *ngIf="gameIsLive">
+<br>
+<br>
+<br>
+<div>
+   <div class="mancala1">
+      <span class="mancala-card" style="color:blue">{{currentMancala}}</span>
+   </div>
+   <div class="mancala2">
+      <span class="mancala-card" style="color:red">{{otherMancala}}</span>
+   </div>
 </div>
 <div class="content">
-
-  <!-- Resources -->
-  <h2>Resources</h2>
-  <p>Here are some links to help you get started:</p>
-
-  <div class="card-container-other-player">
-    <span *ngFor="let pit of otherPlayerBoard; let i = index" class="card" style="color:red">{{pit}}</span>
-  </div>
-  <div class="card-container">
-    <span *ngFor="let pit of currentPlayerBoard; let i = index" class="card" (click)="play(i)" style="color:blue">{{pit}}</span>
-  </div>
-
+   <!-- Resources -->
+   <div >
+     <div class="Center">
+      <h1>{{currentPlayerName}}'s turn</h1>
+      <h2>GameID = {{gameId}}</h2>
+     </div>
+      
+      <div class="card-container-other-player">
+         <span *ngFor="let pit of otherPlayerBoard; let i = index" class="card" style="color:red">{{pit}}</span>
+      </div>
+      <div  class="card-container">
+         <span *ngFor="let pit of currentPlayerBoard; let i = index" class="card" (click)="play(i)" style="color:blue">{{pit}}</span>
+      </div>
+   </div>
 </div>
-
+</div>
 <router-outlet></router-outlet>
