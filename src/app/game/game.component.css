@@ -166,7 +166,6 @@ a, a:visited, a:hover {
 a:hover {
   color: #125699;
 }
-
 .circle-link:hover {
   transform: translateY(-0.25rem);
   box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
@@ -178,7 +177,6 @@ a:hover {
     visibility: hidden;
   }
 }
-
 html, body {
   display: flex;
   justify-content: center;
@@ -197,13 +195,6 @@ html, body {
   font-size: 32px;
   font-weight: 300;
   text-align: center;
-  }
-  p {
-  font-size: 12px;
-  }
-  hr {
-  color: #a9a9a9;
-  opacity: 0.3;
   }
   .main-block {
   max-width: 340px; 
@@ -298,7 +289,4 @@ html, body {
   font-size: 14px;
   font-weight: 600;
   color: #fff;
-  }
-  button:hover {
-  background: #26a9e0;
   }
